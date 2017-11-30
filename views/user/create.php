@@ -45,5 +45,5 @@
     <br><div class="col-lg-offset-1 col-lg-11 text-danger"><?=$ans?></div>
 <?php endif;?>
 <?php
-echo '<pre>';
-print_r($ans);
+/*echo '<pre>';
+print_r($ans);*/
