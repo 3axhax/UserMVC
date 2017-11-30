@@ -36,8 +36,27 @@ class UserController extends SiteController
             return $this->render('main/accessden');
         else
         {
-            $ans = User::validateUser($_REQUEST) ? User::validateUser($_REQUEST) : true;
+            $user = new User();
+            if (($_REQUEST) && $user->validateUser($_REQUEST))
+            {
+                $user->saveUser($_REQUEST);
+                header('Location: /user');
+            }
+            else $ans = $user->report;
             return $this->render('user/create', ['ans' => $ans]);
+        }
+    }
+    public function actionDelete($id)
+    {
+        if ($_SESSION['user']['role'] != 'a')
+            return $this->render('main/accessden');
+        else
+        {
+            if($id)
+            {
+                User::deleteUser($id);
+                header('Location: /user');
+            }
         }
     }
 }

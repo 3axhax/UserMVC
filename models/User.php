@@ -2,6 +2,9 @@
 
 class User
 {
+    
+    public $report = true;
+    
     public static function getUserList()
     {
         $db = Db::getConnection();
@@ -50,19 +53,52 @@ class User
             unset($_SESSION['user']);
         }
     }
-    public static function validateUser($request)
+    public function validateUser($request)
     {
         switch ($request['submitbutton']){
             case 'create':
-                $db = Db::getConnection();
-                $result = $db->query('SELECT * FROM user WHERE login="'.$request['login'].'"');
-                if (!($result)) {
+                if ($this->uniqueUser($request['login'])) {
                     if ($request['password'] == $request['confirmpassword']) {
-                        if (filter_var($request['email'], FILTER_VALIDATE_EMAIL)) return true;
-                        else return 'Введён некорректный E-mail';
-                    } else return 'Подтверждение пароля не совпадает';
-                } else return 'Пользователь "'.$request['login'].'" уже существует';
+                        if (filter_var($request['email'], FILTER_VALIDATE_EMAIL)) {
+                            if ($this->allFieldsFill($request)) return true;
+                            else {
+                                $this->report = 'Не все поля заполнены';
+                                return false;
+                            }
+                        } else {
+                            $this->report = 'Введён некорректный E-mail';
+                            return false;
+                        }
+                    } else {
+                        $this->report = 'Подтверждение пароля не совпадает';
+                        return false;
+                    }
+                } else {
+                    $this->report = 'Пользователь "'.$request['login'].'" уже существует';
+                    return false;
+                }
                 break;
         }
+    }
+    private function uniqueUser($login)
+    {
+        $db = Db::getConnection();
+        $result = $db->query('SELECT * FROM user WHERE login="'.$login.'"');
+        return !($result = $result->fetch());
+    }
+    private function allFieldsFill($request)
+    {
+        $this->report = $request;
+        return (isset($request['login']) && isset($request['password']) && isset($request['confirmpassword']) && isset($request['name']) && isset($request['email']) && isset($request['role']));
+    }
+    public function saveUser($request)
+    {
+        $db = Db::getConnection();
+        return $result = $db->query('INSERT INTO `user` (`id`, `login`, `password`, `name`, `email`, `role`) VALUES (NULL, "'.$request['login'].'", "'.$request['password'].'", "'.$request['name'].'", "'.$request['email'].'", "'.$request['role'].'");');
+    }
+    public static function deleteUser($id)
+    {
+        $db = Db::getConnection();
+        return $result = $db->query('DELETE FROM `user` WHERE `user`.`id` = '.$id.'');
     }
 }

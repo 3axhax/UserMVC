@@ -41,11 +41,21 @@
             <td>
                 <a href="/user/view/<?=$user['id']?>" title="Просмотр"><span class="glyphicon glyphicon-eye-open"></span></a>
                 <a href="/user/edit/<?=$user['id']?>" title="Редактировать"><span class="glyphicon glyphicon-pencil"></span></a>
-                <a href="#" title="Удалить"><span class="glyphicon glyphicon-trash"></span></a>
+                <a href="/user/delete/<?=$user['id']?>" title="Удалить" onclick="return confirm('Действительно удалить пользователя <?=$user['login']?>')"><span class="glyphicon glyphicon-trash"></span></a>
             </td>
         </tr>
     <?php endforeach;?>
 </table>
+<div class="btn-group">
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Действие <span class="caret"></span></button>
+    <ul class="dropdown-menu" role="menu">
+        <li><a href="#">Действие</a></li>
+        <li><a href="#">Другое действие</a></li>
+        <li><a href="#">Что-то иное</a></li>
+        <li class="divider"></li>
+        <li><a href="#">Отдельная ссылка</a></li>
+    </ul>
+</div>
 <?php
 /*echo '<pre>';
 print_r($_SESSION['user']);*/
