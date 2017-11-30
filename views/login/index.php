@@ -21,6 +21,16 @@
         <div class="col-lg-offset-1 col-lg-11 text-danger"><?=$ans?></div>
     <?php endif;?>
 </form>
+<div class="btn-group">
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Действие <span class="caret"></span></button>
+    <ul class="dropdown-menu" role="menu">
+        <li><a href="#">Действие</a></li>
+        <li><a href="#">Другое действие</a></li>
+        <li><a href="#">Что-то иное</a></li>
+        <li class="divider"></li>
+        <li><a href="#">Отдельная ссылка</a></li>
+    </ul>
+</div>
 <?php
 /*echo '<pre>';
 print_r($ans);*/
