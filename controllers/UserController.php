@@ -5,10 +5,6 @@ include_once ROOT. '/controllers/SiteController.php';
 
 class UserController extends SiteController
 {
-    public function actionSort($par)
-    {
-        return print_r($par);
-    }
     public function actionList($par = false)
     {
         $user = new User();

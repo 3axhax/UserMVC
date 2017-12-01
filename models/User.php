@@ -1,8 +1,11 @@
 <?php
 
+const ADMIN = 'a';
+const USER = 'u';
+
 class User
 {
-    
+
     public $report = true;
     public $id;
     public $login;
@@ -20,10 +23,10 @@ class User
     {
         switch ($this->role)
         {
-            case 'a':
+            case ADMIN:
                 return 'Администратор';
                 break;
-            case 'u':
+            case USER:
                 return 'Пользователь';
                 break;
             default:
@@ -140,7 +143,7 @@ class User
         }
         else return false;
     }
-    
+
     public function createUser($request)
     {
         $db = Db::getConnection();
