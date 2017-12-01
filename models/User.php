@@ -57,6 +57,7 @@ class User
 
         return $userList;
     }
+
     public function getUserById($id)
     {
         $id = intval($id);
@@ -78,6 +79,7 @@ class User
             return $this;
         }
     }
+
     public static function checkUsersAuth($userlogin)
     {
         $db = Db::getConnection();
@@ -85,6 +87,7 @@ class User
         $result->setFetchMode(PDO::FETCH_ASSOC);
         return ($_SESSION['user'] = $result->fetch()) ? false : 'Неверный логин/пароль';
     }
+
     public static function setUserLogout()
     {
         if (isset($_SESSION['user']))
@@ -92,6 +95,7 @@ class User
             unset($_SESSION['user']);
         }
     }
+
     public function validateUser($request)
     {
         if ($this->uniqueUser($request['login'])) {
@@ -115,6 +119,7 @@ class User
             return false;
         }
     }
+
     private function uniqueUser($login)
     {
         if (isset($this->login) && ($this->login == $login)) return true;
@@ -122,6 +127,7 @@ class User
         $result = $db->query('SELECT * FROM user WHERE login="'.$login.'"');
         return !($result = $result->fetch());
     }
+
     private function allFieldsFill($request)
     {
         if (isset($request['login']) && isset($request['password']) && isset($request['confirmpassword']) && isset($request['name']) && isset($request['email']) && isset($request['role']))
@@ -134,6 +140,7 @@ class User
         }
         else return false;
     }
+    
     public function createUser($request)
     {
         $db = Db::getConnection();
