@@ -4,6 +4,7 @@ return array(
     'user/edit/([0-9]+)' => 'user/edit/$1',
     'user/delete/([0-9]+)' => 'user/delete/$1',
     'user/create' => 'user/create',
+    'user/sort' => 'user/list',
     'user' => 'user/list',
     'login' => 'login/index',
     'logout' => 'login/logout',

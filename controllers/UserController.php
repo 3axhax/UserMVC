@@ -5,20 +5,33 @@ include_once ROOT. '/controllers/SiteController.php';
 
 class UserController extends SiteController
 {
-    public function actionList()
+    public function actionSort($par)
     {
-        $users = User::getUserList();
+        return print_r($par);
+    }
+    public function actionList($par = false)
+    {
+        $user = new User();
+        if ($par) $user->setUserSort($par);
+        if ($_REQUEST) {
+            $user->filter['name'] = $_REQUEST['name'];
+            $user->filter['login'] = $_REQUEST['login'];
+            $user->filter['email'] = $_REQUEST['email'];
+            $user->filter['role'] = $_REQUEST['role'];
+        }
+        $users = $user->getUserList();
         $this->setTitle('Список пользователей');
-        return $this->render('user/list',['users' => $users]);;
+        return $this->render('user/list',['users' => $users, 'sortrules' => $user->sortrules, 'filter' => $user->filter]);
     }
     public function actionView($id)
     {
         if ($id)
         {
-            $user = User::getUserById($id);
+            $user = new User();
+            $user->getUserById($id);
         }
-        $this->setTitle('Пользователь: '. $user['login']);
-        return $this->render('user/view', ['user' => $user]);;
+        $this->setTitle('Пользователь: '. $user->login);
+        return $this->render('user/view', ['user' => $user]);
     }
     public function actionEdit($id)
     {
@@ -26,8 +39,15 @@ class UserController extends SiteController
             return $this->render('main/accessden');
         else
         {
-            $user = User::getUserById($id);
-            return $this->render('user/edit', ['user' => $user]);
+            $user = new User();
+            $user->getUserById($id);
+            if (($_REQUEST) && $user->validateUser($_REQUEST))
+            {
+                $user->editUser($_REQUEST);
+                return $this->render('user/edit', ['user' => $user, 'ans' => 'Success']);
+            }
+            $ans = $user->report;
+            return $this->render('user/edit', ['user' => $user, 'ans' => $ans]);
         }
     }
     public function actionCreate()
@@ -39,7 +59,7 @@ class UserController extends SiteController
             $user = new User();
             if (($_REQUEST) && $user->validateUser($_REQUEST))
             {
-                $user->saveUser($_REQUEST);
+                $user->createUser($_REQUEST);
                 header('Location: /user');
             }
             else $ans = $user->report;

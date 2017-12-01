@@ -4,13 +4,45 @@ class User
 {
     
     public $report = true;
+    public $id;
+    public $login;
+    public $password;
+    public $name;
+    public $email;
+    public $role;
+    public $sortrules = ['id' => 'ASC'];
+    public $filter = [  'name' => '',
+                        'login' => '',
+                        'email' => '',
+                        'role' => ''];
     
-    public static function getUserList()
+    public function roleFull()
+    {
+        switch ($this->role)
+        {
+            case 'a':
+                return 'Администратор';
+                break;
+            case 'u':
+                return 'Пользователь';
+                break;
+            default:
+                return $this->role;
+        }
+    }
+            
+    public function getUserList()
     {
         $db = Db::getConnection();
         $userList = array();
-
-        $result = $db->query('SELECT * FROM user');
+        $sql = 'SELECT * FROM user WHERE ';
+        foreach ($this->filter as $field => $value)
+        {
+            $sql .= '`'.$field . '` LIKE "%' . $value . '%" AND ';
+        }
+        $sql = substr($sql,0,-4);
+        $sql .= 'ORDER BY '.key($this->sortrules).' '.current($this->sortrules);
+        $result = $db->query($sql);
 
         $i = 0;
         while($row = $result->fetch()) {
@@ -25,7 +57,7 @@ class User
 
         return $userList;
     }
-    public static function getUserById($id)
+    public function getUserById($id)
     {
         $id = intval($id);
         if ($id) {
@@ -35,8 +67,15 @@ class User
             $result->setFetchMode(PDO::FETCH_ASSOC);
 
             $userItem = $result->fetch();
+            
+            $this->id = $userItem['id'];
+            $this->login = $userItem['login'];
+            $this->password = $userItem['password'];
+            $this->name = $userItem['name'];
+            $this->email = $userItem['email'];
+            $this->role = $userItem['role'];
 
-            return $userItem;
+            return $this;
         }
     }
     public static function checkUsersAuth($userlogin)
@@ -55,50 +94,74 @@ class User
     }
     public function validateUser($request)
     {
-        switch ($request['submitbutton']){
-            case 'create':
-                if ($this->uniqueUser($request['login'])) {
-                    if ($request['password'] == $request['confirmpassword']) {
-                        if (filter_var($request['email'], FILTER_VALIDATE_EMAIL)) {
-                            if ($this->allFieldsFill($request)) return true;
-                            else {
-                                $this->report = 'Не все поля заполнены';
-                                return false;
-                            }
-                        } else {
-                            $this->report = 'Введён некорректный E-mail';
-                            return false;
-                        }
-                    } else {
-                        $this->report = 'Подтверждение пароля не совпадает';
+        if ($this->uniqueUser($request['login'])) {
+            if ($request['password'] == $request['confirmpassword']) {
+                if (filter_var($request['email'], FILTER_VALIDATE_EMAIL)) {
+                    if ($this->allFieldsFill($request)) return true;
+                    else {
+                        $this->report = 'Не все поля заполнены';
                         return false;
                     }
                 } else {
-                    $this->report = 'Пользователь "'.$request['login'].'" уже существует';
+                    $this->report = 'Введён некорректный E-mail';
                     return false;
                 }
-                break;
+            } else {
+                $this->report = 'Подтверждение пароля не совпадает';
+                return false;
+            }
+        } else {
+            $this->report = 'Пользователь "' . $request['login'] . '" уже существует';
+            return false;
         }
     }
     private function uniqueUser($login)
     {
+        if (isset($this->login) && ($this->login == $login)) return true;
         $db = Db::getConnection();
         $result = $db->query('SELECT * FROM user WHERE login="'.$login.'"');
         return !($result = $result->fetch());
     }
     private function allFieldsFill($request)
     {
-        $this->report = $request;
-        return (isset($request['login']) && isset($request['password']) && isset($request['confirmpassword']) && isset($request['name']) && isset($request['email']) && isset($request['role']));
+        if (isset($request['login']) && isset($request['password']) && isset($request['confirmpassword']) && isset($request['name']) && isset($request['email']) && isset($request['role']))
+        {
+            if ((trim($request['login']) != '') && (trim($request['password']) != '') && (trim($request['confirmpassword']) != '') && (trim($request['name']) != '') && (trim($request['email']) != '') && (trim($request['role']) != ''))
+            {
+                return true;
+            }
+            else return false;
+        }
+        else return false;
     }
-    public function saveUser($request)
+    public function createUser($request)
     {
         $db = Db::getConnection();
         return $result = $db->query('INSERT INTO `user` (`id`, `login`, `password`, `name`, `email`, `role`) VALUES (NULL, "'.$request['login'].'", "'.$request['password'].'", "'.$request['name'].'", "'.$request['email'].'", "'.$request['role'].'");');
     }
+
+    public function editUser($request)
+    {
+        $db = Db::getConnection();
+        $this->login = $request['login'];
+        $this->password = $request['password'];
+        $this->name = $request['name'];
+        $this->email = $request['email'];
+        $this->role = $request['role'];
+        return $result = $db->query('UPDATE `user` SET `login` = "'.$this->login.'", `password` = "'.$this->password.'", `name` = "'.$this->name.'", `email` = "'.$this->email.'", `role` = "'.$this->role.'" WHERE `user`.`id` = '.$this->id.';');
+    }
+
     public static function deleteUser($id)
     {
         $db = Db::getConnection();
         return $result = $db->query('DELETE FROM `user` WHERE `user`.`id` = '.$id.'');
+    }
+
+    public function setUserSort($par)
+    {
+        unset($this->sortrules);
+        $par = explode('_', $par);
+        $this->sortrules = [$par[0] => ($par[1] == 'up') ? 'ASC' : 'DESC'];
+        return $this->sortrules;
     }
 }
