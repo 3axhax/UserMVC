@@ -1,5 +1,10 @@
 <?php
 
+namespace models;
+
+use components\Db;
+use PDO;
+
 const ADMIN = 'a';
 const USER = 'u';
 
