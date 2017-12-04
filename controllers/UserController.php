@@ -1,7 +1,7 @@
 <?php
 
-include_once ROOT. '/models/User.php';
-include_once ROOT. '/controllers/SiteController.php';
+use models\User;
+use controllers\SiteController;
 
 class UserController extends SiteController
 {
