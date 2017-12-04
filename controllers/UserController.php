@@ -31,8 +31,10 @@ class UserController extends SiteController
     }
     public function actionEdit($id)
     {
-        if (($_SESSION['user']['role'] != 'a') && ($_SESSION['user']['id'] != $id))
+        if (($_SESSION['user']['role'] != 'a') && ($_SESSION['user']['id'] != $id)) {
+            $this->setTitle('Отказано в доступе');
             return $this->render('main/accessden');
+        }
         else
         {
             $user = new User();
@@ -43,13 +45,16 @@ class UserController extends SiteController
                 return $this->render('user/edit', ['user' => $user, 'ans' => 'Success']);
             }
             $ans = $user->report;
+            $this->setTitle('Редактировать пользователя: '. $user->login);
             return $this->render('user/edit', ['user' => $user, 'ans' => $ans]);
         }
     }
     public function actionCreate()
     {
-        if ($_SESSION['user']['role'] != 'a')
+        if ($_SESSION['user']['role'] != 'a'){
+            $this->setTitle('Отказано в доступе');
             return $this->render('main/accessden');
+        }
         else
         {
             $user = new User();
@@ -59,13 +64,16 @@ class UserController extends SiteController
                 header('Location: /user');
             }
             else $ans = $user->report;
+            $this->setTitle('Создать нового пользователя');
             return $this->render('user/create', ['ans' => $ans]);
         }
     }
     public function actionDelete($id)
     {
-        if ($_SESSION['user']['role'] != 'a')
+        if ($_SESSION['user']['role'] != 'a'){
+            $this->setTitle('Отказано в доступе');
             return $this->render('main/accessden');
+        }
         else
         {
             if($id)

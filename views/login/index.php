@@ -17,7 +17,11 @@
             <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-log-in"> Войти</button>
         </div>
     </div>
-    <?php if (($ans !== true) && ($ans)) :?>
-        <div class="col-lg-offset-1 col-lg-11 text-danger"><?=$ans?></div>
-    <?php endif;?>
 </form>
+<?php if (($ans !== true) && ($ans)) :?>
+    <br>
+    <div class="alert alert-danger alert-dismissible col-lg-offset-1 col-lg-3" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <?=$ans?>
+    </div>
+<?php endif;?>

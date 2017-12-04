@@ -49,6 +49,3 @@
         <?=$ans?>
     </div>
 <?php endif;?>
-<?php
-/*echo '<pre>';
-print_r($ans);*/
