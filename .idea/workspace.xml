@@ -32,8 +32,8 @@
       <file leaf-file-name="User.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/models/User.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="21" column="30" selection-start-line="21" selection-start-column="30" selection-end-line="21" selection-end-column="30" />
+            <state relative-caret-position="51">
+              <caret line="15" column="40" selection-start-line="15" selection-start-column="40" selection-end-line="15" selection-end-column="40" />
               <folding>
                 <element signature="n#roleFull#0;n#User#0;n#!!top" expanded="false" />
                 <element signature="n#getUserList#0;n#User#0;n#!!top" expanded="false" />
@@ -438,12 +438,12 @@
       <workItem from="1511867086701" duration="1418000" />
       <workItem from="1511929854575" duration="37834000" />
       <workItem from="1512047390860" duration="2450000" />
-      <workItem from="1512096627846" duration="23893000" />
+      <workItem from="1512096627846" duration="25072000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="71706000" />
+    <option name="totallyTimeSpent" value="72885000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="163" y="94" width="1689" height="511" extended-state="0" />
@@ -832,8 +832,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/models/User.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="21" column="30" selection-start-line="21" selection-start-column="30" selection-end-line="21" selection-end-column="30" />
+        <state relative-caret-position="51">
+          <caret line="15" column="40" selection-start-line="15" selection-start-column="40" selection-end-line="15" selection-end-column="40" />
           <folding>
             <element signature="n#roleFull#0;n#User#0;n#!!top" expanded="false" />
             <element signature="n#getUserList#0;n#User#0;n#!!top" expanded="false" />
